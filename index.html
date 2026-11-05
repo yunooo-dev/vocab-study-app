@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocab Studio - Học Từ Vựng Destination B1 & Academic English</title>
+  <meta name="description"
+    content="Trang web học từ vựng tiếng Anh tinh gọn, không AI-slop, tích hợp Flashcard 3D, Quiz ngữ cảnh và Bảng tra cứu thông minh.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="logo-badge">V</div>
+        <div>
+          <h1 class="brand-title">Vocab Studio</h1>
+          <p class="brand-subtitle">Destination B1 & Academic Vocabulary in Use</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs" aria-label="Chế độ học">
+          <button id="tab-btn-flashcard" class="tab-btn active" onclick="switchTab('flashcard')">
+            Flashcards
+          </button>
+          <button id="tab-btn-quiz" class="tab-btn" onclick="switchTab('quiz')">
+            Quiz Ngữ Cảnh
+          </button>
+          <button id="tab-btn-wordlist" class="tab-btn" onclick="switchTab('wordlist')">
+            Bảng Tra Từ
+          </button>
+        </nav>
+
+        <!-- Dark/Light Theme Toggle -->
+        <button id="theme-toggle-btn" class="icon-btn" onclick="toggleTheme()" title="Đổi giao diện Sáng / Tối"
+          aria-label="Đổi giao diện">
+          <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Control & Filter Bar -->
+    <div class="control-bar">
+      <div class="filter-group">
+        <span class="filter-label">Chuyên mục:</span>
+        <div id="custom-category-dropdown" class="custom-dropdown">
+          <button id="category-dropdown-trigger" class="dropdown-trigger" type="button" aria-haspopup="listbox"
+            aria-expanded="false">
+            <span id="category-dropdown-label">Tất cả từ vựng (123 từ)</span>
+            <svg class="ui-icon dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div id="category-dropdown-menu" class="dropdown-menu hidden" role="listbox">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-badge-group">
+        <span class="stat-item total" id="stat-total">123 từ</span>
+        <span class="stat-item mastered" id="stat-mastered">0 đã thuộc</span>
+        <span class="stat-item review" id="stat-review">0 cần ôn</span>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: FLASHCARDS VIEW                                    -->
+    <!-- ========================================================= -->
+    <section id="view-flashcard">
+
+      <!-- Main Flippable Flashcard -->
+      <div id="flashcard-main-wrapper" class="flashcard-wrapper" onclick="toggleFlip()"
+        title="Nhấp hoặc bấm Space để lật thẻ">
+        <div id="flashcard-inner" class="flashcard-inner">
+
+          <!-- Front Face -->
+          <div class="card-face card-front">
+            <div class="card-header-row">
+              <div class="card-meta-left">
+                <span id="fc-tag" class="tag-badge noun">noun</span>
+                <span id="fc-source" class="source-label">Topic Vocabulary</span>
+              </div>
+              <button class="icon-btn" onclick="event.stopPropagation(); shuffleCards();" title="Trộn thẻ ngẫu nhiên"
+                aria-label="Trộn thẻ">
+                <svg class="ui-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="16 3 21 3 21 8"></polyline>
+                  <line x1="4" y1="20" x2="21" y2="3"></line>
+                  <polyline points="21 16 21 21 16 21"></polyline>
+                  <line x1="15" y1="15" x2="21" y2="21"></line>
+                  <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="card-center">
+              <div class="word-display-row">
+                <h2 id="fc-word" class="main-word">champion</h2>
+                <button class="audio-btn"
+                  onclick="event.stopPropagation(); speakWord(document.getElementById('fc-word').innerText);"
+                  title="Nghe phát âm chuẩn (Phím P)" aria-label="Phát âm">
+                  <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                  </svg>
+                </button>
+              </div>
+              <p id="fc-ipa" class="ipa-text">/ˈtʃæm.pi.ən/</p>
+            </div>
+
+            <div class="card-footer-row">
+              <span id="fc-hint" class="hint-text">Ngữ cảnh: "She became the world [ . . . ] last year."</span>
+              <span>Lật thẻ (Space) ↵</span>
+            </div>
+          </div>
+
+          <!-- Back Face -->
+          <div class="card-face card-back">
+            <div class="card-header-row">
+              <span id="fc-back-tag" class="tag-badge">noun</span>
+              <span class="source-label">Nghĩa tiếng Việt & Ngữ cảnh</span>
+            </div>
+
+            <div class="card-center">
+              <h3 id="fc-meaning" class="card-meaning">Nhà vô địch</h3>
+
+              <div class="example-box">
+                <div class="example-box-label">Câu ví dụ thực tế:</div>
+                <p id="fc-example-text" class="example-text">
+                  She became the world <span class="highlight-keyword">champion</span> last year.
+                </p>
+              </div>
+            </div>
+
+            <div class="card-footer-row">
+              <span>Đánh dấu: [Phím 1] Cần ôn • [Phím 2] Đã thuộc</span>
+              <span>Quay lại (Space) ↵</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Empty State (When Filter yields 0 items) -->
+      <div id="flashcard-empty-state" class="quiz-card hidden" style="text-align: center; padding: 3rem 1.5rem;">
+        <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Không có từ
+          vựng nào trong bộ lọc này.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Hãy chọn lại chuyên mục hoặc kiểm
+          tra lại tiến độ đã học.</p>
+        <button class="btn btn-primary" onclick="selectCategory('all', 'Tất cả từ vựng (123 từ)');">
+          Xem tất cả từ vựng
+        </button>
+      </div>
+
+      <!-- Action Navigation Buttons -->
+      <div class="flashcard-nav-controls">
+        <button class="btn btn-secondary" onclick="prevCard()" title="Phím Mũi tên trái">
+          ← Trước
+        </button>
+
+        <div class="action-btn-group">
+          <button class="btn btn-review" onclick="markCardReview()" title="Đánh dấu cần ôn lại (Phím 1)">
+            <span class="status-dot"></span> Cần ôn lại (1)
+          </button>
+          <button class="btn btn-mastered" onclick="markCardMastered()" title="Đánh dấu đã thuộc (Phím 2)">
+            <span class="status-dot"></span> Đã thuộc (2)
+          </button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="nextCard()" title="Phím Mũi tên phải">
+          Sau →
+        </button>
+      </div>
+
+      <!-- Progress Track -->
+      <div class="progress-container">
+        <div class="progress-track">
+          <div id="fc-progress-fill" class="progress-fill"></div>
+        </div>
+        <span id="fc-progress-count" class="progress-count">1 / 123</span>
+      </div>
+
+      <!-- Keyboard Shortcuts Bar -->
+      <div class="shortcuts-bar">
+        <span class="shortcut-item"><kbd>Space</kbd> Lật thẻ</span>
+        <span class="shortcut-item"><kbd>←</kbd> <kbd>→</kbd> Chuyển thẻ</span>
+        <span class="shortcut-item"><kbd>1</kbd> Cần ôn</span>
+        <span class="shortcut-item"><kbd>2</kbd> Đã thuộc</span>
+        <span class="shortcut-item"><kbd>P</kbd> Phát âm</span>
+      </div>
+
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: CONTEXT CLOZE QUIZ                                 -->
+    <!-- ========================================================= -->
+    <section id="view-quiz" class="hidden quiz-container">
+      <div id="quiz-card-wrapper" class="quiz-card">
+        <!-- Visual Progress Bar inside Quiz Card -->
+        <div class="quiz-progress-track">
+          <div id="quiz-progress-fill" class="quiz-progress-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="quiz-header">
+          <div>
+            <span style="color: var(--text-muted);">Hình thức:</span>
+            <strong> Điền từ vào câu thật theo ngữ cảnh</strong>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span id="quiz-progress-badge" class="quiz-progress-pill">Câu 1 / 29</span>
+            <span id="quiz-score-badge" class="quiz-score-badge">Đúng: 0 / 0</span>
+          </div>
+        </div>
+
+        <!-- Meta info -->
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span id="quiz-tag" class="tag-badge noun">noun</span>
+            <div id="quiz-pronounce-box" class="hidden" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+              <span id="quiz-ipa" class="ipa-text" style="font-size: 0.85rem; margin: 0;">/ˈtʃæm.pi.ən/</span>
+              <button class="icon-btn" style="width: 1.85rem; height: 1.85rem;"
+                onclick="speakWord(state.quiz.currentQuestion.word)" title="Nghe phát âm" aria-label="Nghe phát âm">
+                <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <span id="quiz-source" class="source-label">Destination B1</span>
+        </div>
+
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Nghĩa tiếng Việt: <strong id="quiz-meaning" style="color: var(--text-primary);">Nhà vô địch</strong>
+        </p>
+
+        <!-- Sentence Cloze Question Box -->
+        <div class="quiz-cloze-box">
+          <span id="quiz-sentence-start">She became the world </span>
+          <span id="quiz-blank-slot" class="quiz-blank-slot">_______</span>
+          <span id="quiz-sentence-end"> last year.</span>
+        </div>
+
+        <!-- 4 Options Grid -->
+        <div id="quiz-options-container" class="quiz-options-grid">
+          <!-- Generated dynamically by app.js -->
+        </div>
+
+        <!-- Feedback Box -->
+        <div id="quiz-feedback" class="quiz-feedback-box"></div>
+
+        <!-- Next Question Action -->
+        <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
+            <button id="quiz-next-btn" class="btn btn-primary hidden" onclick="handleNextQuizStep()">
+              Câu tiếp theo → (Enter)
+            </button>
+        </div>
+      </div>
+
+      <!-- Results / Summary Screen (When round finishes) -->
+      <div id="quiz-summary-card" class="quiz-card hidden" style="text-align: center; padding: 2rem 1.5rem;">
+        <div style="font-size: 2.75rem; margin-bottom: 0.35rem;">🎉</div>
+        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">
+          Hoàn thành lượt học!
+        </h2>
+        <p id="quiz-summary-subtitle" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Bạn đã kiểm tra hết <strong>29 từ</strong> trong bộ này.
+        </p>
+
+        <!-- Big Stat Cards Grid -->
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.65rem; margin-bottom: 1.25rem;">
+          <div
+            style="background: var(--bg-subtle); padding: 0.75rem 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div id="summary-total-tested" style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">29
+              / 29</div>
+            <div style="font-size: 0.725rem; color: var(--text-muted); margin-top: 0.2rem;">Tổng từ trong bộ</div>
+          </div>
+          <div
+            style="background: var(--success-bg); padding: 0.75rem 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--success-border);">
+            <div id="summary-correct-count" style="font-size: 1.35rem; font-weight: 800; color: var(--success);">24
+            </div>
+            <div style="font-size: 0.725rem; color: var(--success); margin-top: 0.2rem;">Trả lời đúng</div>
+          </div>
+          <div
+            style="background: var(--danger-bg); padding: 0.75rem 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--danger-border);">
+            <div id="summary-wrong-count" style="font-size: 1.35rem; font-weight: 800; color: var(--danger);">5</div>
+            <div style="font-size: 0.725rem; color: var(--danger); margin-top: 0.2rem;">Cần ôn lại</div>
+          </div>
+          <div
+            style="background: var(--accent-light); padding: 0.75rem 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--accent-border);">
+            <div id="summary-accuracy" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-primary);">83%
+            </div>
+            <div style="font-size: 0.725rem; color: var(--accent-primary); margin-top: 0.2rem;">Độ chính xác</div>
+          </div>
+        </div>
+
+        <!-- Wrong words review section -->
+        <div id="summary-wrong-words-section" class="hidden" style="text-align: left; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.825rem; font-weight: 700; color: var(--danger); margin-bottom: 0.45rem;">
+            ⚠️ Các từ bạn trả lời chưa đúng cần ôn lại:
+          </div>
+          <div id="summary-wrong-words-list"
+            style="display: flex; flex-direction: column; gap: 0.4rem; max-height: 180px; overflow-y: auto;">
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+          <button id="summary-retry-all-btn" class="btn btn-primary" onclick="initQuizSession()">
+            🔄 Luyện lại toàn bộ
+          </button>
+          <button id="summary-retry-wrong-btn" class="btn btn-secondary hidden" onclick="retryWrongWordsQuiz()">
+            ⚠️ Chỉ luyện lại các từ sai
+          </button>
+          <button class="btn btn-secondary" onclick="switchTab('wordlist')">
+            📋 Xem bảng tra từ
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State (When Filter yields 0 items) -->
+      <div id="quiz-empty-state" class="quiz-card hidden" style="text-align: center; padding: 3rem 1.5rem;">
+        <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Không có từ
+          vựng nào trong bộ lọc này.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Hãy chọn lại chuyên mục hoặc kiểm
+          tra lại tiến độ đã học.</p>
+        <button class="btn btn-primary" onclick="selectCategory('all', 'Tất cả từ vựng (123 từ)');">
+          Xem tất cả từ vựng
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: SMART WORDLIST EXPLORER                            -->
+    <!-- ========================================================= -->
+    <section id="view-wordlist" class="hidden wordlist-container">
+      <div class="search-box-row">
+        <div class="search-input-wrapper">
+          <span class="search-icon-symbol">
+            <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input type="text" id="search-input-field" class="search-input-field"
+            placeholder="Tìm kiếm từ vựng, phiên âm IPA, nghĩa tiếng Việt...">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span id="table-result-count" style="font-size: 0.825rem; font-weight: 600; color: var(--text-muted);">123
+            từ</span>
+          <button class="btn btn-secondary" onclick="resetAllProgress()"
+            style="font-size: 0.75rem; padding: 0.4rem 0.75rem;">
+            Đặt lại tiến độ
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="vocab-table">
+          <thead>
+            <tr>
+              <th>Từ vựng & IPA</th>
+              <th>Loại từ</th>
+              <th>Nghĩa tiếng Việt</th>
+              <th>Câu ví dụ chuẩn</th>
+              <th>Trạng thái</th>
+              <th style="text-align: center;">Nghe</th>
+            </tr>
+          </thead>
+          <tbody id="wordlist-tbody">
+            <!-- Rendered by app.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <span>Bộ từ vựng giáo trình: <strong>Destination B1</strong> & <strong>Academic Vocabulary in Use</strong></span>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
